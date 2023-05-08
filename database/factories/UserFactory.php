@@ -10,6 +10,26 @@ use Illuminate\Support\Str;
  */
 class UserFactory extends Factory
 {
+
+    private $nationalIds = [
+        '40202091600452',
+        '52502093262442',
+        '37202091610452',
+        '25602041500432',
+        '30202081600462',
+        '20302091698472',
+        '33102091600482'
+    ];
+
+    private $phoneNumbers = [
+        '01556130630',
+        '01267220631',
+        '01062131516',
+        '01101516590',
+        '01280312510',
+        '01109922510'
+    ];
+
     /**
      * Define the model's default state.
      *
@@ -17,12 +37,23 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $email = fake()->unique()->safeEmail();
+
+        $isMale = fake()->boolean();
+        $gender = $isMale ? 'male' : 'female';
+        $name = $isMale ? fake()->firstNameMale() : fake()->firstNameFemale();
+
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
+            'email' => $email,
             'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'password' => fake()->password(),
             'remember_token' => Str::random(10),
+
+            'name' => $name,
+            'national_number' => $this->nationalIds[fake()->numberBetween(0, count($this->nationalIds)-1)],
+            'phone' => $this->phoneNumbers[fake()->numberBetween(0, count($this->phoneNumbers)-1)],
+            'age' => fake()->numberBetween(25, 45),
+            'gender' => $gender
         ];
     }
 
