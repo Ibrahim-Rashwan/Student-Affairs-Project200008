@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->json('questions');
-            $table->dateTime('starTime');
-            $table->dateTime('endTime');
-            $table->boolean('canDisplayscore');
+            $table->dateTime('start_time');
+            $table->dateTime('end_time');
+            $table->boolean('can_display_score');
             $table->timestamps();
         });
     }

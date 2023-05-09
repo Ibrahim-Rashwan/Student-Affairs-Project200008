@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CoursesController;
+use App\Http\Controllers\DepartmentsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +18,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::resource('departments', DepartmentsController::class);
+Route::resource('courses', CoursesController::class);
