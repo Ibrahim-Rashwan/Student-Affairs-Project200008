@@ -19,3 +19,7 @@ Route::get('/', function () {
 Route::get('/user', function () {
     return 'welcome abdo';
 });
+
+Route::get('/user2', function () {
+    return 'welcome islam';
+});
