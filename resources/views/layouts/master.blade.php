@@ -32,7 +32,7 @@
         <link rel="stylesheet" type="text/css" href="/css/app.css">
         @yield('styles')
 
-        <script src={{asset('js/ckeditor.js')}}></script>
+        {{-- <script src={{asset('js/ckeditor.js')}}></script> --}}
 
     </head>
 

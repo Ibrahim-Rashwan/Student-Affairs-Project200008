@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Course;
 use Illuminate\Http\Request;
+use Throwable;
 
 class CoursesController extends Controller
 {
@@ -36,14 +37,23 @@ class CoursesController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
+            'department_id' => 'required',
+            'doctor_id' => 'required',
             'name' => 'required',
-            'code' => 'required'
+            'code' => 'required',
+            'number_of_hours' => 'required'
         ]);
 
-        $course = Course::create($request->all());
-        $msg = 'Course created successfully';
+        $course = Course::create($request->all(['name', 'code', 'number_of_hours', 'department_id', 'doctor_id']) + [
+            'materials' => '[]'
+        ]);
 
-        return redirect(DepartmentsController::ROUTE.$course->id)->
+        if ((int)$request->pre_requisite_id != -1) {
+            $course->pre_requisite_id = $request->pre_requisite_id;
+        }
+
+        $msg = 'Course created successfully';
+        return redirect(CoursesController::ROUTE.$course->id)->
             with('success', $msg);
     }
 
@@ -53,7 +63,8 @@ class CoursesController extends Controller
     public function show(string $id)
     {
         $data = [
-            'course' => Course::findOrFail($id)
+            // 'course' => Course::findOrFail($id)->with('pre_requisite')
+            'course' => Course::with(['pre_requisite'])->findOrFail($id)
         ];
 
         return view('courses.show')->with($data);
@@ -77,17 +88,25 @@ class CoursesController extends Controller
     public function update(Request $request, string $id)
     {
         $this->validate($request, [
+            'department_id' => 'required',
+            'doctor_id' => 'required',
             'name' => 'required',
-            'code' => 'required'
+            'code' => 'required',
+            'number_of_hours' => 'required'
         ]);
 
         $course = Course::findOrFail($id);
         $course->fill($request->all());
+
+        if ($request->pre_requisite_id != -1) {
+            $course->pre_requisite_id = $request->pre_requisite_id;
+        }
+
         $course->save();
 
         $msg = 'Course updated successfully';
 
-        return redirect(DepartmentsController::ROUTE.$course->id)->
+        return redirect(CoursesController::ROUTE.$course->id)->
             with('success', $msg);
     }
 
@@ -97,6 +116,11 @@ class CoursesController extends Controller
     public function destroy(string $id)
     {
         $course = Course::findOrFail($id);
+        $materials = json_decode($course->materials);
+        foreach ($materials as $material) {
+            $path = $this->getMaterialFolderName($course).$material;
+            unlink($path);
+        }
         try {
             $course->delete();
             $msg = 'Course deleted successfully';
@@ -104,8 +128,17 @@ class CoursesController extends Controller
             $msg = "Couldn't delete course - make sure no one is using it";
         }
 
-        return redirect(DepartmentsController::ROUTE)->
+        return redirect(CoursesController::ROUTE)->
             with('delete', $msg);
     }
 
+    public function t()
+    {
+        return view('t');
+    }
+
+    public function tt()
+    {
+        return redirect('/courses')->with('success', 'This is a success message');
+    }
 }

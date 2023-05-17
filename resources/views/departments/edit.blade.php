@@ -1,6 +1,7 @@
 @extends('layouts.master')
 
 @section('content')
+    <h1>Edit Department:</h1>
 
     <form action="/departments/{{$department->id}}" method="POST">
         <input type="hidden" name="_token" value={{ csrf_token() }} />
