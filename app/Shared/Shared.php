@@ -5,11 +5,15 @@ namespace App\Shared;
 class Shared
 {
 
-    const NAVBAR_INDEX_KEY = 'navbarIndex';
-    const NAVBAR_POSTS_INDEX = 1;
-
-    const SIDEBAR_INDEX_KEY = 'sidebarIndex';
-    const NAVBAR_MEDIA_INDEX = 2;
+    public const USER_RULES = [
+        'email' => 'required',
+        'password' => 'required',
+        'name' => 'required',
+        'national_number' => 'required',
+        'phone' => 'required',
+        'age' => 'required',
+        'gender' => 'required'
+    ];
 
     public static function getDisplayName(string $filename)
     {

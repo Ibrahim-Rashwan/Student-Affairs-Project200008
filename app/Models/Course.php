@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Student;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Exam;
@@ -37,6 +38,15 @@ class Course extends Model
     public function exams()
     {
         return $this->hasMany(Exam::class);
+    }
+
+    public function students()
+    {
+        return  $this->belongsToMany(Student::class, 'subscriptions')->
+            using(Subscription::class)->
+            as('subscription')->
+            withPivot('mark')->
+            withTimestamps();
     }
 
 }

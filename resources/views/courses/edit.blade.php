@@ -37,12 +37,10 @@
 
         <label>
             Department:
-            <?php $counter = 0; ?>
             <select name="department_id">
                 @foreach ($departments as $department)
-                    <?php $counter++; ?>
                     <option value={{$department->id}}
-                        <?php if ($course->department_id == $counter) { echo "selected"; }?>>
+                        <?php if ($course->department_id == $department->id) { echo "selected"; }?>>
                         {{$department->name}} ({{$department->code}})
                     </option>
                 @endforeach
@@ -55,11 +53,9 @@
         <label>
             Doctor:
             <select name="doctor_id">
-                <?php $counter = 0; ?>
                 @foreach ($doctors as $doctor)
-                    <?php $counter++; ?>
                     <option value={{$doctor->id}}
-                        <?php if ($course->doctor_id == $counter) { echo "selected"; }?>>
+                        <?php if ($course->doctor_id == $doctor->id) { echo "selected"; }?>>
                         {{$doctor->user->name}}
                     </option>
                 @endforeach
@@ -73,11 +69,9 @@
             Pre-Requisite:
             <select name="pre_requisite_id">
                 <option value=-1>None</option>
-                <?php $counter = 0; ?>
                 @foreach ($courses as $curcourse)
-                    <?php $counter++; ?>
                     <option value={{$curcourse->id}}
-                        <?php if ($course->pre_requisite_id == $counter) { echo "selected"; }?>>
+                        <?php if ($course->pre_requisite_id == $curcourse->id) { echo "selected"; }?>>
                         {{$curcourse->name}} ({{$curcourse->code}})
                     </option>
                 @endforeach

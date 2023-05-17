@@ -6,15 +6,11 @@
 
 @extends('layouts.master')
 
-@section('styles')
-    <link rel="stylesheet" type="text/css" href="/css/dropzone.min.css">
-@endsection
-
 @section('content')
 
     <h1>Add Course:</h1>
 
-    <form id="upload-form" action="/courses" method="POST">
+    <form action="/courses" method="POST">
         <input type="hidden" name="_token" value={{ csrf_token() }} />
 
         <label>
@@ -82,8 +78,3 @@
     <a href="/courses">Back</a>
 
 @endsection
-
-@section('scripts')
-    <script src="/js/dropzone.min.js"></script>
-@endsection
-

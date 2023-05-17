@@ -100,6 +100,8 @@ class CoursesController extends Controller
 
         if ($request->pre_requisite_id != -1) {
             $course->pre_requisite_id = $request->pre_requisite_id;
+        } else {
+            $course->pre_requisite_id = null;
         }
 
         $course->save();
