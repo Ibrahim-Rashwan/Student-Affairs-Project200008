@@ -18,8 +18,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+<<<<<<< HEAD
+Route::get('/user ', function () {
+    return 'first commit';
+=======
 Route::get('/sayed', function () {
     return view('welcome');
+>>>>>>> 9685409b689be8a553e286fe1e9ec3498f93d214
 });
 
 Route::resource('/Doctors',Doctorscontroller::class);
