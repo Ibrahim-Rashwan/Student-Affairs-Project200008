@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Doctorscontroller;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,3 +21,7 @@ Route::get('/', function () {
 Route::get('/sayed', function () {
     return view('welcome');
 });
+
+Route::resource('/Doctors',Doctorscontroller::class);
+
+//Route::get('/aa',[Doctorscontroller::class,'index']);
