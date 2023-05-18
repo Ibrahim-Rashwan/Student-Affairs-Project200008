@@ -5,7 +5,7 @@
     $id = $student->id;
 ?>
 
-@extends('layouts.master')
+@extends('layouts.app')
 
 @section('content')
 
@@ -31,9 +31,14 @@
             <h3>Courses:</h3>
             @foreach ($student->courses as $course)
 
-                <a href="courses/{{$course->id}}">{{$course->name}} ({{$course->code}})</a>
+                <a href="courses/{{$course->id}}">{{$course->id}}-{{$course->name}} ({{$course->code}})</a>
                 <br>
-                Mark: {{$course->subscription->mark}}
+                Mark:
+                @if ($course->subscription->mark != null)
+                    {{$course->subscription->mark}}
+                @else
+                    None
+                @endif
 
                 <hr>
             @endforeach

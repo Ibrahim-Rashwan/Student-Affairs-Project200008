@@ -26,4 +26,9 @@ class Department extends Model
         return $this->hasMany(Student::class);
     }
 
+    public function toString()
+    {
+        return "{$this->id}-{$this->name} ({$this->code})";
+    }
+
 }

@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.app')
 
 @section('styles')
     <link rel="stylesheet" type="text/css" href="/css/dropzone.min.css">

@@ -4,7 +4,7 @@
     $courses = App\Models\Course::all();
 ?>
 
-@extends('layouts.master')
+@extends('layouts.app')
 
 @section('content')
 
@@ -75,6 +75,6 @@
 
     </form>
 
-    <a href="/courses">Back</a>
+    <a href="/courses" class="btn btn-primary">Back</a>
 
 @endsection

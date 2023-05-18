@@ -4,7 +4,7 @@
     $courses = App\Models\Course::all();
 ?>
 
-@extends('layouts.master')
+@extends('layouts.app')
 
 @section('content')
 

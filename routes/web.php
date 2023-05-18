@@ -35,9 +35,14 @@ Route::resource('departments', DepartmentsController::class);
 Route::resource('courses', CoursesController::class);
 Route::resource('courses.materials', MaterialsController::class)->except(['index', 'show']);
 Route::resource('courses.exams', ExamsController::class)->except(['index', 'show']);
+Route::post('courses/{course}/subscribe', [CoursesController::class, 'subscribe']);
 
 Route::resource('doctors', DoctorsController::class);
 
 Route::resource('students', StudentsController::class);
 // Route::resource('courses.materials', CoursesController::class)->only(['create', 'store']);
 
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

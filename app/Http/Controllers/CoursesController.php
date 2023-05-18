@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\User;
+use App\Models\Subscription;
+use App\Shared\Shared;
 use Illuminate\Http\Request;
 use Throwable;
 
@@ -10,6 +13,11 @@ class CoursesController extends Controller
 {
 
     private const ROUTE = '/courses/';
+
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
     /**
      * Display a listing of the resource.
@@ -132,6 +140,25 @@ class CoursesController extends Controller
 
         return redirect(CoursesController::ROUTE)->
             with('delete', $msg);
+    }
+
+    public function subscribe(string $id)
+    {
+        $course = Course::find($id);
+
+        $userId = Shared::getActiveUserId();
+        $user = User::find($userId);
+        $student = $user->student;
+
+        $student->courses()->attach($course);
+        // $subscribtion = Subscription::create([
+        //     'student_id' => $student->id,
+        //     'course_id' => $course->id
+        // ]);
+
+        $msg = 'Subscribed to course successfully';
+        return redirect(CoursesController::ROUTE)->
+            with('success', $msg);
     }
 
     public function t()

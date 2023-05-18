@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Student::class)->constrained();
             $table->foreignIdFor(Course::class)->constrained();
-            $table->integer('mark');
+            $table->integer('mark')->nullable();
             $table->timestamps();
         });
     }

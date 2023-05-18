@@ -3,7 +3,7 @@
     $departments = App\Models\Department::all();
 ?>
 
-@extends('layouts.master')
+@extends('layouts.app')
 
 @section('content')
 

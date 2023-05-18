@@ -49,4 +49,9 @@ class Course extends Model
             withTimestamps();
     }
 
+    public function toString()
+    {
+        return "{$this->id}-{$this->name} ({$this->code})";
+    }
+
 }

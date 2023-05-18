@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class AdminSeeder extends Seeder
@@ -22,7 +23,7 @@ class AdminSeeder extends Seeder
             [
                 'email' => AdminSeeder::EMAIL,
                 'email_verified_at' => now(),
-                'password' => 'root',
+                'password' => Hash::make('root'),
                 'remember_token' => Str::random(10),
                 'name' => 'Ibrahim Rashwan',
                 'national_number' => '30202091600452',
@@ -33,7 +34,6 @@ class AdminSeeder extends Seeder
         );
 
         Admin::updateOrCreate(
-            ['user_id' => $user->id],
             ['user_id' => $user->id]
         );
 

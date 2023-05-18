@@ -15,6 +15,11 @@ class Shared
         'gender' => 'required'
     ];
 
+    public static function getActiveUserId()
+    {
+        return 17;
+    }
+
     public static function getDisplayName(string $filename)
     {
         $index = strpos($filename, '_');
