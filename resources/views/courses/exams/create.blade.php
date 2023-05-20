@@ -3,15 +3,16 @@
 
 @section('content')
 
-    <h1>Add Course:</h1>
+    <h1>Add Exam to:</h1>
+    {!! $course->toString() !!}
 
-    <form action="/courses/{{$course->id}}/exams" method="POST" enctype="multipart/form-data">
+    <form action="/courses/{{$course->id}}/exams" method="POST" enctype="multipart/form-data" class="mt-5">
         <input type="hidden" name="_token" value={{ csrf_token() }} />
 
-        <label class="form-label">
+        <label class="form-label" for="file">
             File:
-            <input class="form-control" type="file" accept=".pdf,.doc,.docx,.odt,.ppt,.pptx,.odp" required name="file" />
         </label>
+        <input id="file" class="form-control" type="file" accept=".pdf,.doc,.docx,.odt,.ppt,.pptx,.odp" required name="file" />
 
         <br>
         <br>

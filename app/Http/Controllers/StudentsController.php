@@ -6,6 +6,8 @@ use App\Models\Student;
 use App\Models\User;
 use App\Shared\Shared;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 
 class StudentsController extends Controller
@@ -17,10 +19,24 @@ class StudentsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $students = Student::all();
+        $availableStudents = $this->getAvaiableStudents($students);
+
+        $page = $request->input('page');
+        $perPage = 20;
+        $slice = array_slice($availableStudents, ($page-1) * $perPage, $perPage);
+        // var_dump($page);
+
+        $paginator = new LengthAwarePaginator($slice, count($availableStudents), $perPage, $page, [
+            'path'  => $request->path(),
+            'query' => $request->query()
+        ]);
+
         $data = [
-            'students' => $this->getAvaiableStudents()
+            'students' => $paginator,
+            'links' => $paginator->links()
         ];
 
         return view('students.index')->with($data);
@@ -65,7 +81,7 @@ class StudentsController extends Controller
     public function show(string $id)
     {
         $student = Student::with('user')->findOrFail($id);
-        $avaiableStudents = $this->getAvaiableStudents();
+        $avaiableStudents = $this->getAvaiableStudents(Student::all());
 
         $found = false;
         foreach ($avaiableStudents as $avaiableStudent) {
@@ -138,12 +154,16 @@ class StudentsController extends Controller
             with('delete', $msg);
     }
 
-    private function getAvaiableStudents() {
-        $students = Student::with('user')->get();
+    private function getAvaiableStudents($students) {
+
+        // $students = Student::with('user')->get();
+        // $students = Student::paginate(20);
         $avaiableStudents = [];
 
         if (Shared::isAdmin()) {
-            $avaiableStudents = $students;
+            foreach ($students as $student) {
+                array_push($avaiableStudents, $student);
+            }
         } else if (Shared::isDoctor()) {
             foreach (Auth::user()->doctor->courses as $course) {
                 foreach ($course->students as $courseStudent) {

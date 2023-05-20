@@ -6,6 +6,7 @@ use App\Models\Course;
 use App\Shared\Shared;
 use File;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class MaterialsController extends Controller
 {
@@ -16,6 +17,11 @@ class MaterialsController extends Controller
     public function create(string $id)
     {
         $course = Course::findOrFail($id);
+
+        if (!$this->canAdd($course)) {
+            return redirect('/courses/'.$id);
+        }
+
         return view('courses.materials.create')->with('course', $course);
     }
 
@@ -45,6 +51,10 @@ class MaterialsController extends Controller
     public function edit(string $courseId, string $materialId)
     {
         $course = Course::findOrFail($courseId);
+
+        if (!$this->canAdd($course)) {
+            return redirect('/courses/'.$courseId);
+        }
 
         $materials = json_decode($course->materials);
 
@@ -120,6 +130,25 @@ class MaterialsController extends Controller
     private static function getMaterialDirectory($course)
     {
         return 'materials/' . $course->name . ' (' . $course->code . ')/';
+    }
+
+    private function canAdd($course)
+    {
+        $canAdd = false;
+
+        if (Shared::isAdmin()) {
+            $canAdd = true;
+        } else if (Shared::isDoctor()) {
+            $doctor = Auth::user()->doctor;
+            foreach ($doctor->courses as $doctorCourse) {
+                if ($doctorCourse->id == $course->id) {
+                    $canAdd = true;
+                    break;
+                }
+            }
+        }
+
+        return $canAdd;
     }
 
 }

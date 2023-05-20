@@ -75,12 +75,14 @@
                         <a href="{{$path}}" target="_blank">{{$name}}</a>
                         <div style="margin-left: 5%">
                             <a href="{{$path}}" download={{$name}} class="btn btn-primary">Download</a>
-                            <a href="{{$route}}/materials/{{$counter}}/edit" class="btn btn-secondary">Edit</a>
-                            <form action="{{$route}}/materials/{{$counter}}" method="POST" class="d-inline">
-                                <input type="hidden" name="_token" value={{csrf_token()}}>
-                                <input type="hidden" name="_method" value='DELETE'>
-                                <button type="submit" class="btn btn-danger">Delete</button>
-                            </form>
+                            @if ($canAdd)
+                                <a href="{{$route}}/materials/{{$counter}}/edit" class="btn btn-secondary">Edit</a>
+                                <form action="{{$route}}/materials/{{$counter}}" method="POST" class="d-inline">
+                                    <input type="hidden" name="_token" value={{csrf_token()}}>
+                                    <input type="hidden" name="_method" value='DELETE'>
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            @endif
                         </div>
 
                         <hr>
@@ -117,12 +119,14 @@
 
                         <div class="mt-3">
                             <a href="{{$path}}" download="{{$name}}" class="btn btn-primary">Download</a>
-                            <a href="{{$route}}/exams/{{$exam->id}}/edit" class="btn btn-secondary">Edit</a>
-                            <form action="{{$route}}/exams/{{$exam->id}}" method="POST" class="d-inline">
-                                <input type="hidden" name="_token" value={{csrf_token()}}>
-                                <input type="hidden" name="_method" value='DELETE'>
-                                <button type="submit" class="btn btn-danger">Delete</button>
-                            </form>
+                            @if ($canAdd)
+                                <a href="{{$route}}/exams/{{$exam->id}}/edit" class="btn btn-secondary">Edit</a>
+                                <form action="{{$route}}/exams/{{$exam->id}}" method="POST" class="d-inline">
+                                    <input type="hidden" name="_token" value={{csrf_token()}}>
+                                    <input type="hidden" name="_method" value='DELETE'>
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            @endif
                         </div>
 
                     </div>
@@ -179,7 +183,7 @@
             @endif
         @endif
 
-        @if (App\Shared\Shared::isAdmin())
+        @if ($canAdd)
             <form action="{{$route}}/generate_student_names" method="POST" class="d-inline">
                 <input type="hidden" name="_token" value={{csrf_token()}}>
                 <button type="submit" class="btn btn-secondary">Generate Student Names</button>

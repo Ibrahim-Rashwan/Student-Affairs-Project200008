@@ -21,3 +21,7 @@
 .deletee {
     background-color: #FF000033;
 }
+
+a {
+    text-decoration: none;
+}

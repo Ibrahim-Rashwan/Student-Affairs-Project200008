@@ -13,6 +13,10 @@
 
     @if ($students && count($students) > 0)
 
+        <div class="d-flex justify-content-center">
+            {!! $links !!}
+        </div>
+
         @foreach ($students as $student)
             <?php
                 $user = $student->user;
@@ -64,6 +68,10 @@
 
           </div>
         @endforeach
+
+        <div class="d-flex justify-content-center">
+            {!! $links !!}
+        </div>
     @else
         <h1>No students!</h1>
     @endif
