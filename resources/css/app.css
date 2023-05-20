@@ -1,4 +1,4 @@
-.alert {
+.alertt {
     padding: 1em;
     margin: 1em;
 
@@ -10,14 +10,14 @@
     box-shadow: 0.1em 0.1em 0.5em 0.1em;
 }
 
-.error {
+.errorr {
     background-color: #FF000055;
 }
 
-.success {
+.successs {
     background-color: #00FF0055;
 }
 
-.delete {
+.deletee {
     background-color: #FF000033;
 }

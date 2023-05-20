@@ -1,7 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="card mb-5">
 
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h1 class="">Courses</h1>
+        @if (App\Shared\Shared::isAdmin())
+        <a class=" text-align-center btn btn-success" href="/courses/create">Add courses</a>
+        @endif
+    </div>
+</div>
     @if ($courses && count($courses) > 0)
 
         @foreach ($courses as $course)
@@ -11,8 +19,9 @@
                 </a>
 
                 <p>Number of hours: {{$course->number_of_hours}}</p>
-                <p>Department: {{$course->department->toString()}}</p>
+                <p>Department: {!! $course->department->link() !!}</p>
 
+                @if (App\Shared\Shared::isAdmin())
                 <div class="d-flex justify-content-between mt-3">
                     <a href="/courses/{{$course->id}}/edit" class="btn btn-primary mb-3">Edit</a>
 
@@ -23,6 +32,7 @@
                         <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
                 </div>
+                @endif
             </div>
         @endforeach
 
@@ -30,9 +40,6 @@
         <h1>No courses!</h1>
     @endif
 
-    <br>
-    <br>
 
-    <a href="/courses/create">Add course</a>
 
 @endsection

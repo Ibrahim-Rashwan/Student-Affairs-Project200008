@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use App\Models\Student;
+use App\Shared\Shared;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Exam;
+use Illuminate\Support\Facades\Auth;
 
 class Course extends Model
 {
@@ -49,9 +51,54 @@ class Course extends Model
             withTimestamps();
     }
 
+    public function getSubscriptionState()
+    {
+        $user = Auth::user();
+        $student = $user->student;
+        // return $student->courses;
+        if (!isset($student)) {
+            return false;
+        }
+
+        foreach ($student->courses as $subscribedCourse) {
+            if ($this->id == $subscribedCourse->id) {
+                return $subscribedCourse->subscription->mark;
+            }
+        }
+
+        return false;
+    }
+
+    public function canSubscribe()
+    {
+        $user = Auth::user();
+        $student = $user->student;
+
+        if (!isset($student)) {
+            return false;
+        }
+
+        if ($this->pre_requisite == null) {
+            return true;
+        }
+
+        foreach ($student->courses as $subscribedCourse) {
+            if ($this->pre_requisite->id == $subscribedCourse->id) {
+                return $subscribedCourse->subscription->mark >= Shared::PASS_MARK;
+            }
+        }
+
+        return false;
+    }
+
     public function toString()
     {
         return "{$this->id}-{$this->name} ({$this->code})";
+    }
+
+    public function link()
+    {
+        return "<a href=\"/courses/{$this->id}\">{$this->toString()}</a>";
     }
 
 }

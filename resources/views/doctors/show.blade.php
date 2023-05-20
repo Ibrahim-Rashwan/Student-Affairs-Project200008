@@ -9,33 +9,43 @@
 
 @section('content')
 
-    @include('inc.users.show')
+    <div class="card p-3">
+        @include('inc.users.show')
 
-    <hr>
+        <hr>
 
-    <section style="margin-left: 5%">
-        @if ($doctor->courses && count($doctor->courses) > 0)
-            <h3>Courses:</h3>
-            @foreach ($doctor->courses as $course)
-                <a href="/courses/{{$course->id}}">{{$course->id}}-{{$course->name}} ({{$course->code}})</a>
+        <section style="margin-left: 5%">
+            @if ($doctor->courses && count($doctor->courses) > 0)
+                <h3>Courses:</h3>
+                @foreach ($doctor->courses as $course)
+                    {!! $course->link() !!}
+                    <hr>
+                @endforeach
+            @else
+                <h3>No Courses...</h3>
                 <hr>
-            @endforeach
-        @else
-            <h3>No Courses...</h3>
-        @endif
-    </section>
+            @endif
+        </section>
 
-    <hr>
+        <form action="/doctors/{{$doctor->id}}" method="POST">
+            <input type="hidden" name="_token" value={{ csrf_token() }} />
+            <input type="hidden" name="_method" value='DELETE' />
 
-    <a href="{{$route}}/edit">Edit</a>
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    @if (App\Shared\Shared::isAdmin())
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    @endif
 
-    <form action="{{$route}}" method="POST">
-        <input type="hidden" name="_token" value={{ csrf_token() }} />
-        <input type="hidden" name="_method" value='DELETE' />
+                    @if (App\Shared\Shared::isAdmin() || (App\Shared\Shared::isDoctor() && App\Shared\Shared::getActiveUserTypedId() == $doctor->id))
+                    <a class="btn btn-primary mx-1" href="/doctors/{{$doctor->id}}/edit">Edit</a>
+                    @endif
+                </div>
 
-        <button type="submit">Delete</button>
-    </form>
+                <a class="btn btn-secondary" href="/doctors/">Back</a>
+            </div>
+        </form>
 
-    <a href="/doctors">Back</a>
+    </div>
 
 @endsection

@@ -1,18 +1,18 @@
-@if (isset($showHeader) && $showHeader == true)
+@if (isset($showHeader) ? $showHeader : true)
     <h2>{{$id}}-{{$user->name}}</h2>
 @endif
 
 <p>
-    Phone:<br>
+    Phone:
     {{$user->phone}}
 </p>
 
 <p>
-    Age:<br>
+    Age:
     {{$user->age}}
 </p>
 
 <p>
-    Gender:<br>
+    Gender:
     {{$user->gender}}
 </p>

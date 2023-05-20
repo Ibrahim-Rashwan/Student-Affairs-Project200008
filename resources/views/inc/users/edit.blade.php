@@ -1,54 +1,47 @@
-<label>
+<div class="mb-3">
+    <label class="form-label w-100 ">
     Email:
-    <input type="email" name="email" value="{{$user->email}}" />
+    <input  class="form-control" type="email" name="email" value="{{$user->email}}" />
 </label>
 
-<br>
-<br>
-
-<label>
-    Password:
-    <input type="password" name="password" value="{{$user->password}}" />
-</label>
-
-<br>
-<br>
-
-<label>
+<div class="mb-3">
+    <label class="form-label w-100 ">
     Name:
-    <input type="text" name="name" value="{{$user->name}}" />
+    <input class="form-control"  type="text" name="name" value="{{$user->name}}" />
 </label>
+</div>
 
-<br>
-<br>
 
-<label>
+<div class="mb-3">
+    <label class="form-label w-100 ">
     National Number:
-    <input type="number" name="national_number" value="{{$user->national_number}}" />
+    <input class="form-control"  type="number" name="national_number" value="{{$user->national_number}}" />
 </label>
+</div>
 
-<br>
-<br>
 
-<label>
+
+<div class="mb-3">
+    <label class="form-label w-100 ">
     Phone:
-    <input type="number" name="phone" value="{{$user->phone}}" />
+    <input class="form-control"  type="number" name="phone" value="{{$user->phone}}" />
 </label>
+</div>
 
-<br>
-<br>
 
-<label>
+<div class="mb-3">
+    <label class="form-label w-100 ">
     Age:
-    <input type="number" name="age" value="{{$user->age}}" />
+    <input class="form-control"  type="number" name="age" value="{{$user->age}}" />
 </label>
+</div>
 
-<br>
-<br>
 
-<label>
+
+<div class="mb-3">
+    <label class="form-label w-100 ">
     Gender:
-    <select name="gender">
+    <select class="form-select" name="gender">
         <option value='male'
             <?php if ($user->gender == 'male') { echo "selected"; }?>>
             Male
@@ -59,3 +52,4 @@
         </option>
     </select>
 </label>
+</div>

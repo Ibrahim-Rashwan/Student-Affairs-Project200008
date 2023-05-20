@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Department;
+use App\Shared\Shared;
 use Illuminate\Http\Request;
 use Throwable;
 
@@ -28,6 +29,10 @@ class DepartmentsController extends Controller
      */
     public function create()
     {
+        if (!Shared::isAdmin()) {
+            return redirect('/departments');
+        }
+
         return view('departments.create');
     }
 
@@ -65,6 +70,10 @@ class DepartmentsController extends Controller
      */
     public function edit(string $id)
     {
+        if (!Shared::isAdmin()) {
+            return redirect('/departments');
+        }
+
         $data = [
             'department' => Department::findOrFail($id)
         ];

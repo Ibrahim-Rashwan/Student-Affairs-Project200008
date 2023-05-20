@@ -31,4 +31,9 @@ class Department extends Model
         return "{$this->id}-{$this->name} ({$this->code})";
     }
 
+    public function link()
+    {
+        return "<a href=\"/departments/{$this->id}\">{$this->toString()}</a>";
+    }
+
 }

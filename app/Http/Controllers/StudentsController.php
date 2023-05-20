@@ -6,11 +6,13 @@ use App\Models\Student;
 use App\Models\User;
 use App\Shared\Shared;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StudentsController extends Controller
 {
 
     private const ROUTE = '/students/';
+
 
     /**
      * Display a listing of the resource.
@@ -18,7 +20,7 @@ class StudentsController extends Controller
     public function index()
     {
         $data = [
-            'students' => Student::with('user')->get()
+            'students' => $this->getAvaiableStudents()
         ];
 
         return view('students.index')->with($data);
@@ -29,6 +31,10 @@ class StudentsController extends Controller
      */
     public function create()
     {
+        if (!Shared::isAdmin()) {
+            return redirect('/students');
+        }
+
         return view('students.create');
     }
 
@@ -58,8 +64,22 @@ class StudentsController extends Controller
      */
     public function show(string $id)
     {
+        $student = Student::with('user')->findOrFail($id);
+        $avaiableStudents = $this->getAvaiableStudents();
+
+        $found = false;
+        foreach ($avaiableStudents as $avaiableStudent) {
+            if ($avaiableStudent->id == $student->id) {
+                $found = true;
+            }
+        }
+
+        if (!$found) {
+            return redirect('/students');
+        }
+
         $data = [
-            'student' => Student::with('user')->findOrFail($id)
+            'student' => $student
         ];
 
         return view('students.show')->with($data);
@@ -70,8 +90,14 @@ class StudentsController extends Controller
      */
     public function edit(string $id)
     {
+        $student = Student::findOrFail($id);
+
+        if (!Shared::isAdmin() && !(Shared::isStudent() && Shared::getActiveUserTypedId() == $student->id)) {
+            return redirect('/students');
+        }
+
         $data = [
-            'student' => Student::findOrFail($id)
+            'student' => $student
         ];
 
         return view('students.edit')->with($data);
@@ -111,4 +137,45 @@ class StudentsController extends Controller
         return redirect(StudentsController::ROUTE)->
             with('delete', $msg);
     }
+
+    private function getAvaiableStudents() {
+        $students = Student::with('user')->get();
+        $avaiableStudents = [];
+
+        if (Shared::isAdmin()) {
+            $avaiableStudents = $students;
+        } else if (Shared::isDoctor()) {
+            foreach (Auth::user()->doctor->courses as $course) {
+                foreach ($course->students as $courseStudent) {
+                    array_push($avaiableStudents, $courseStudent);
+                }
+            }
+        } else if (Shared::isStudent()) {
+            $loggedInStudent = Auth::user()->student;
+            foreach ($students as $student) {
+                if ($student->department_id == $loggedInStudent->department_id) {
+                    array_push($avaiableStudents, $student);
+                } else {
+                    $pushed = false;
+
+                    foreach ($student->courses as $course) {
+                        foreach ($loggedInStudent->courses as $loggedInStudentCourse) {
+                            if ($course->id == $loggedInStudentCourse->id) {
+                                array_push($avaiableStudents, $student);
+                                $pushed = true;
+                                break;
+                            }
+                        }
+
+                        if ($pushed) {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $avaiableStudents;
+    }
+
 }

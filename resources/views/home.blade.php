@@ -14,7 +14,33 @@
                         </div>
                     @endif
 
-                    {{ __('You are logged in!') }}
+                    <div class="mb-5">
+                        {{ __('You are logged in as') }}
+                        @if (App\Shared\Shared::isAdmin())
+                            Admin
+                        @elseif(App\Shared\Shared::isDoctor())
+                            Doctor
+                        @elseif(App\Shared\Shared::isStudent())
+                            Student
+                        @endif
+                    </div>
+
+                    <?php
+                        $showHeader = false;
+                        if (App\Shared\Shared::isDoctor()) {
+                            $link = $user->doctor->link();
+                        } else if (App\Shared\Shared::isStudent()) {
+                            $link = $user->student->link();
+                        }
+                    ?>
+                    @if (isset($link))
+                        <h2>{!! $link !!}</h2>
+                    @else
+                        <h2>{{$id}}-{{$user->name}}</h2>
+                    @endif
+                    <div class="ms-5">
+                        @include('inc.users.show')
+                    </div>
                 </div>
             </div>
         </div>

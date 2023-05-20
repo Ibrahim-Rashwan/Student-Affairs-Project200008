@@ -15,7 +15,6 @@
 
 @section('content')
 
-    <a href="/courses" class="btn btn-success">Back</a>
 
     <div class="card p-3 mb-3 mt-3">
         <h2>{{$course->toString()}}</h2>
@@ -25,23 +24,22 @@
             {{$course->number_of_hours}}
         </p>
 
+
         <p>
             Department:
-            <br>
-            {{$course->department->name}} ({{$course->department->code}})
+            {!! $course->department->link() !!}
         </p>
 
         <p>
             Doctor:
-            <br>
-            {{$course->doctor->user->name}}
+            {!! $course->doctor->link() !!}
         </p>
 
         <p>
             Pre-Requisite:
-            <br>
+
             @if ($course->pre_requisite != null)
-                {{$course->pre_requisite_id}}-{{$course->pre_requisite->name}} ({{$course->pre_requisite->code}})
+                {!! $course->pre_requisite->link() !!}
             @else
                 None.
             @endif
@@ -53,7 +51,7 @@
             @if ($materials && count($materials) > 0)
                 <h3>Materials:</h3>
                 <?php $counter = -1; ?>
-                <div class="ms-3">
+                <div class="ms-5">
                     @foreach ($materials as $material)
                         <?php
                             $name = App\Shared\Shared::getDisplayName($material);
@@ -63,12 +61,12 @@
 
                         <a href="{{$path}}" target="_blank">{{$name}}</a>
                         <div style="margin-left: 5%">
-                            <a href="{{$path}}" download={{$name}}>Download</a>
-                            <a href="{{$route}}/materials/{{$counter}}/edit">Edit</a>
-                            <form action="{{$route}}/materials/{{$counter}}" method="POST">
+                            <a href="{{$path}}" download={{$name}} class="btn btn-primary">Download</a>
+                            <a href="{{$route}}/materials/{{$counter}}/edit" class="btn btn-secondary">Edit</a>
+                            <form action="{{$route}}/materials/{{$counter}}" method="POST" class="d-inline">
                                 <input type="hidden" name="_token" value={{csrf_token()}}>
                                 <input type="hidden" name="_method" value='DELETE'>
-                                <button type="submit">Delete</button>
+                                <button type="submit" class="btn btn-danger">Delete</button>
                             </form>
                         </div>
 
@@ -77,18 +75,20 @@
                 </div>
             @else
                 <h3>No Materials...</h3>
+                <hr>
             @endif
-            <br>
-            <a href="{{$route}}/materials/create" class="ms-3">Upload materials</a>
+
+            @if (App\Shared\Shared::isAdmin() || (App\Shared\Shared::isDoctor() && App\Shared\Shared::getActiveUserTypedId() == $course->id))
+                <a class="btn btn-success ms-5" href="{{$route}}/materials/create">Upload materials</a>
+            @endif
         </section>
 
-        <hr>
-        <hr>
+        <hr style="height:0.3rem;background-color:black">
 
         <section>
             @if ($course->exams && count($course->exams) > 0)
                 <h3>Exams:</h3>
-                <div class="ms-3">
+                <div class="ms-5">
                 @foreach ($course->exams as $exam)
                     <?php
                         $name = App\Shared\Shared::getDisplayName($exam->name);
@@ -96,19 +96,22 @@
                     ?>
 
                     <a href="{{$path}}" target="_blank"><h4>{{$exam->id}}-{{$name}}</h4></a>
-                    <div style="margin-left: 5%">
-                        <a href="{{$path}}" download="{{$name}}">Download</a>
-                        <a href="{{$route}}/exams/{{$exam->id}}/edit" >Edit</a>
-                        <form action="{{$route}}/exams/{{$exam->id}}" method="POST">
-                            <input type="hidden" name="_token" value={{csrf_token()}}>
-                            <input type="hidden" name="_method" value='DELETE'>
-                            <button type="submit">Delete</button>
-                        </form>
-
+                    <div class="ms-5">
                         <p>{{$exam->can_display_score ? "Can" : "Cannot"}} Display score.</p>
                         <small>Starts at: {{$exam->start_time}}</small>
                         <br>
                         <small>Ends at: {{$exam->end_time}}</small>
+
+                        <div class="mt-3">
+                            <a href="{{$path}}" download="{{$name}}" class="btn btn-primary">Download</a>
+                            <a href="{{$route}}/exams/{{$exam->id}}/edit" class="btn btn-secondary">Edit</a>
+                            <form action="{{$route}}/exams/{{$exam->id}}" method="POST" class="d-inline">
+                                <input type="hidden" name="_token" value={{csrf_token()}}>
+                                <input type="hidden" name="_method" value='DELETE'>
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
+
                     </div>
                     <hr>
                 @endforeach
@@ -117,24 +120,54 @@
                 <h3>No Exams...</h3>
             @endif
 
-            <a href="{{$route}}/exams/create" class="ms-3">Add Exam</a>
+            @if (App\Shared\Shared::isAdmin() || (App\Shared\Shared::isDoctor() && App\Shared\Shared::getActiveUserTypedId() == $course->id))
+                <a class="btn btn-success ms-5" href="{{$route}}/exams/create">Add Exam</a>
+            @endif
         </section>
     </div>
 
     <div class="d-flex justify-content-between">
+        @if (App\Shared\Shared::isAdmin())
         <a href="{{$route}}/edit" class="btn btn-primary d-inline">Edit</a>
+        @endif
 
+        @if (App\Shared\Shared::isAdmin())
         <form action="{{$route}}" method="POST" class="d-inline">
             <input type="hidden" name="_token" value={{ csrf_token() }} />
             <input type="hidden" name="_method" value='DELETE' />
 
             <button type="submit" class="btn btn-danger">Delete</button>
         </form>
+        @endif
 
-        <form action="{{$route}}/subscribe" method="POST" class="d-inline">
-            <input type="hidden" name="_token" value={{csrf_token()}}>
-            <button type="submit" class="btn btn-secondary">Subscribe</button>
-        </form>
+        @if (App\Shared\Shared::isStudent())
+            <?php $subscriptionState = $course->getSubscriptionState(); ?>
+            @if (gettype($subscriptionState) != 'boolean')
+                Already Subscribed -
+                @if ($subscriptionState == null)
+                    In progress
+                @else
+                    Mark: {{$subscriptionState}}
+                    @if ($subscriptionState >= App\Shared\Shared::PASS_MARK)
+                        (Passed)
+                    @else
+                        (Failed)
+                    @endif
+                @endif
+            @else
+                @if ($course->canSubscribe())
+                    <form action="{{$route}}/subscribe" method="POST" class="d-inline">
+                        <input type="hidden" name="_token" value={{csrf_token()}}>
+                        <button type="submit" class="btn btn-secondary">Subscribe</button>
+                    </form>
+                @else
+                    Can't subscribe
+                @endif
+            @endif
+        @endif
+
+    <a href="/courses/" class="btn btn-success">Back</a>
+
     </div>
 
 

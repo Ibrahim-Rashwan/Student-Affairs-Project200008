@@ -3,20 +3,17 @@
 
 @section('content')
 
-    <h1>Create Student:</h1>
-
     <form action="/doctors" method="POST">
         <input type="hidden" name="_token" value={{ csrf_token() }} />
-
+        <legend>Add Doctor</legend>
         @include('inc.users.create')
 
-        <br>
-        <br>
+        <div class="d-flex align-items-center justify-content-between">
+            <button type="submit" class="btn btn-primary" id="submit-button" fform="upload-form">Create</button>
+            <a class="btn btn-secondary" href="/doctors/">Back</a>
+        </div>
 
-        <button id="submit-button" type="submit" fform="upload-form">Submit</button>
 
     </form>
-
-    <a href="/doctors">Back</a>
 
 @endsection

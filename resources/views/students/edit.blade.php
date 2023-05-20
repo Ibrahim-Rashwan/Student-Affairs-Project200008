@@ -16,12 +16,12 @@
 
         @include('inc.users.edit')
 
-        <br>
-        <br>
 
-        <label>
+        <div class="my-3">
+
+        <label class="form-label">
             Department:
-            <select name="department_id">
+            <select class="form-select" name="department_id">
                 @foreach ($departments as $department)
                     <option value={{$department->id}}
                         <?php if ($student->department_id == $department->id) { echo "selected"; }?>>
@@ -30,22 +30,25 @@
                 @endforeach
             </select>
         </label>
+        </div>
 
-        <br>
-        <br>
 
-        <label>
-            level:
-            <input type="number" name="level" value="{{$student->level}}" />
-        </label>
 
-        <br>
-        <br>
+        <div class="my-3">
+            <label class="form-label">
+                level:
+                <input type="number" class="form-control" name="level" value="{{$student->level}}" />
+            </label>
 
-        <button id="submit-button" type="submit" fform="upload-form">Submit</button>
+        </div>
+
+
+        <div class="d-flex align-items-center justify-content-between">
+            <button type="submit" class="btn btn-primary" id="submit-button" fform="upload-form">Edit</button>
+            <a class="btn btn-secondary" href="/students/">Back</a>
+        </div>
 
     </form>
 
-    <a href="/students">Back</a>
 
 @endsection

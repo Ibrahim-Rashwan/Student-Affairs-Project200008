@@ -31,6 +31,10 @@ class DoctorsController extends Controller
      */
     public function create()
     {
+        if (!Shared::isAdmin()) {
+            return redirect('/doctors');
+        }
+
         return view('doctors.create');
     }
 
@@ -69,8 +73,14 @@ class DoctorsController extends Controller
      */
     public function edit(string $id)
     {
+        $doctor = Doctor::findOrFail($id);
+
+        if (!Shared::isAdmin() && !(Shared::isDoctor() && Shared::getActiveUserTypedId() == $doctor->id)) {
+            return redirect('/doctors');
+        }
+
         $data = [
-            'doctor' => Doctor::findOrFail($id)
+            'doctor' => $doctor
         ];
 
         return view('doctors.edit')->with($data);

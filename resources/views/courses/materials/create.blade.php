@@ -8,11 +8,11 @@
     <h1>Upload Materials to:</h1>
     <h2>{{ $course->id }}-{{ $course->name }} ({{ $course->code }})</h2>
 
-    <form id="upload-form" action="/courses/{{ $course->id }}/materials" method="POST" class="dropzone">
+    <form id="upload-form" action="/courses/{{ $course->id }}/materials" method="POST" class="dropzone mt-3 mb-3">
         <input type="hidden" name="_token" value="{{ csrf_token() }}" />
     </form>
 
-    <a href="/courses/{{ $course->id }}">Done</a>
+    <a class="btn btn-success" href="/courses/{{ $course->id }}">Done</a>
 @endsection
 
 @section('scripts')

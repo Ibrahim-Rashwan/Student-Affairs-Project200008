@@ -27,8 +27,8 @@ use Illuminate\Support\Facades\Route;
 // Route::post('/courses/{course}/materials', [CoursesController::class, 'store_material']);
 // Route::delete('/courses/{course}/materials/{material}', [CoursesController::class, 'destroy_material']);
 
-Route::get('/t', [CoursesController::class, 't']);
-Route::post('/tt', [CoursesController::class, 'tt']);
+// Route::get('/t', [CoursesController::class, 't']);
+// Route::post('/tt', [CoursesController::class, 'tt']);
 
 Route::resource('departments', DepartmentsController::class);
 
@@ -43,6 +43,6 @@ Route::resource('students', StudentsController::class);
 // Route::resource('courses.materials', CoursesController::class)->only(['create', 'store']);
 
 
-Auth::routes();
+Auth::routes(['register' => false]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

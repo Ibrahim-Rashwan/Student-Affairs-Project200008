@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Shared\Shared;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -23,6 +25,11 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $data = [
+            'user' => Auth::user(),
+            'id' => Shared::getActiveUserTypedId()
+        ];
+
+        return view('home')->with($data);
     }
 }

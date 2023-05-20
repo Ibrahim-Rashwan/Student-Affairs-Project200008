@@ -7,21 +7,20 @@
 
 @section('content')
 
-    <h1>Edit Student:</h1>
-
     <form action="/doctors/{{$doctor->id}}" method="POST">
         <input type="hidden" name="_token" value={{ csrf_token() }} />
         <input type="hidden" name="_method" value='PUT' />
+        <legend>Edit Doctor</legend>
 
         @include('inc.users.edit')
 
-        <br>
-        <br>
+        <div class="d-flex align-items-center justify-content-between">
+            <button type="submit" class="btn btn-primary" id="submit-button" fform="upload-form">Edit</button>
+            <a class="btn btn-secondary" href="/doctors/{{$doctor->id}}">Back</a>
+        </div>
 
-        <button id="submit-button" type="submit" fform="upload-form">Submit</button>
 
     </form>
 
-    <a href="/doctors">Back</a>
 
 @endsection

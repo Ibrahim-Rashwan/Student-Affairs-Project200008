@@ -8,31 +8,31 @@
     <form action="/courses/{{$course->id}}/exams" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="_token" value={{ csrf_token() }} />
 
-        <label>
+        <label class="form-label">
             File:
-            <input type="file" accept=".pdf,.doc,.docx,.odt,.ppt,.pptx,.odp" required name="file" />
+            <input class="form-control" type="file" accept=".pdf,.doc,.docx,.odt,.ppt,.pptx,.odp" required name="file" />
         </label>
 
         <br>
         <br>
 
-        <label>
+        <label class="form-label">
             Starts at:
-            <input type="datetime" name="start_time" required value="{{now()}}" />
+            <input class="form-control" type="datetime" name="start_time" required value="{{now()}}" />
         </label>
 
         <br>
         <br>
 
-        <label>
+        <label class="form-label">
             Ends at:
-            <input type="datetime" name="end_time" required value="{{now()}}" />
+            <input class="form-control" type="datetime" name="end_time" required value="{{now()}}" />
         </label>
 
         <br>
         <br>
 
-        <label>
+        <label class="form-label">
             Can display score:
             <input type="checkbox" name="can_display_score" checked value="1">
         </label>
@@ -40,7 +40,7 @@
         <br>
         <br>
 
-        <button type="submit">Submit</button>
+        <button class="btn btn-success" type="submit">Submit</button>
 
     </form>
 

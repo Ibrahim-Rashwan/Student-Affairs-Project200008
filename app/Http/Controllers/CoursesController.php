@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Subscription;
 use App\Shared\Shared;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Throwable;
 
 class CoursesController extends Controller
@@ -25,7 +26,7 @@ class CoursesController extends Controller
     public function index()
     {
         $data = [
-            'courses' => Course::all()
+            'courses' => $this->getAvaiableCourses()
         ];
 
         return view('courses.index')->with($data);
@@ -36,6 +37,10 @@ class CoursesController extends Controller
      */
     public function create()
     {
+        if (!Shared::isAdmin()) {
+            return redirect('/courses');
+        }
+
         return view('courses.create');
     }
 
@@ -70,9 +75,23 @@ class CoursesController extends Controller
      */
     public function show(string $id)
     {
+        $course = Course::with(['pre_requisite'])->findOrFail($id);
+        $availableCourses = $this->getAvaiableCourses();
+
+        $found = false;
+        foreach ($availableCourses as $availableCourse) {
+            if ($availableCourse->id == $course->id) {
+                $found = true;
+            }
+        }
+
+        if (!$found) {
+            return redirect('/courses');
+        }
+
         $data = [
             // 'course' => Course::findOrFail($id)->with('pre_requisite')
-            'course' => Course::with(['pre_requisite'])->findOrFail($id)
+            'course' => $course
         ];
 
         return view('courses.show')->with($data);
@@ -83,6 +102,10 @@ class CoursesController extends Controller
      */
     public function edit(string $id)
     {
+        if (!Shared::isAdmin()) {
+            return redirect('/courses');
+        }
+
         $data = [
             'course' => Course::findOrFail($id)
         ];
@@ -146,8 +169,7 @@ class CoursesController extends Controller
     {
         $course = Course::find($id);
 
-        $userId = Shared::getActiveUserId();
-        $user = User::find($userId);
+        $user = Auth::user();
         $student = $user->student;
 
         $student->courses()->attach($course);
@@ -161,13 +183,57 @@ class CoursesController extends Controller
             with('success', $msg);
     }
 
-    public function t()
-    {
-        return view('t');
+    private function getAvaiableCourses() {
+        $courses = Course::with(['pre_requisite'])->get();
+        $availableCourses = [];
+
+        if (Shared::isAdmin()) {
+            $availableCourses = $courses;
+        } else if (Shared::isDoctor()) {
+            $availableCourses = Auth::user()->doctor->courses;
+            // foreach (Auth::user()->doctor->courses as $course) {
+            //     foreach ($course->courses as $courseStudent) {
+            //         array_push($avaiableCourses, $courseStudent);
+            //     }
+            // }
+        } else if (Shared::isStudent()) {
+            $loggedInStudent = Auth::user()->student;
+
+            $availableCourses = [];
+            foreach ($loggedInStudent->courses as $course) {
+                array_push($availableCourses, $course);
+            }
+
+            $courses = Course::all();
+
+            foreach ($courses as $course) {
+                if (!$course->getSubscriptionState() && $course->canSubscribe()) {
+                    array_push($availableCourses, $course);
+                }
+
+                // if ($student->department_id == $loggedInStudent->department_id) {
+                //     array_push($avaiableCourses, $student);
+                // } else {
+                //     $pushed = false;
+
+                //     foreach ($student->courses as $course) {
+                //         foreach ($loggedInStudent->courses as $loggedInStudentCourse) {
+                //             if ($course->id == $loggedInStudentCourse->id) {
+                //                 array_push($avaiableCourses, $student);
+                //                 $pushed = true;
+                //                 break;
+                //             }
+                //         }
+
+                //         if ($pushed) {
+                //             break;
+                //         }
+                //     }
+                // }
+            }
+        }
+
+        return $availableCourses;
     }
 
-    public function tt()
-    {
-        return redirect('/courses')->with('success', 'This is a success message');
-    }
 }

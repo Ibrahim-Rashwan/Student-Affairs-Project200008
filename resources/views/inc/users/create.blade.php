@@ -1,54 +1,43 @@
-<label>
-    Email:
-    <input type="email" name="email" />
+<div class="mb-3">
+<label class="form-label w-100 ">
+    Email:<input class="form-control" type="email" name="email" />
 </label>
+</div>
 
-<br>
-<br>
-
-<label>
-    Password:
-    <input type="password" name="password" />
+<div class="mb-3">
+<label class="form-label w-100">
+    Password:<input class="form-control" type="password" name="password" />
 </label>
+</div>
 
-<br>
-<br>
-
-<label>
-    Name:
-    <input type="text" name="name" />
+<div class="mb-3">
+<label class="form-label w-100">
+    Name:<input class="form-control" type="text" name="name" />
 </label>
+</div>
 
-<br>
-<br>
-
-<label>
-    National Number:
-    <input type="number" name="national_number" />
+<div class="mb-3">
+<label class="form-label w-100">
+    National Number:<input class="form-control" type="number" name="national_number" />
 </label>
+</div>
 
-<br>
-<br>
-
-<label>
-    Phone:
-    <input type="number" name="phone" />
+<div class="mb-3">
+<label class="form-label w-100">
+    Phone:<input class="form-control" type="number" name="phone" />
 </label>
+</div>
 
-<br>
-<br>
-
-<label>
-    Age:
-    <input type="number" name="age" />
+<div class="mb-3">
+<label class="form-label w-100">
+    Age:<input class="form-control" type="number" name="age" />
 </label>
+</div>
 
-<br>
-<br>
-
-<label>
+<div class="mb-3">
+<label class="form-label w-100">
     Gender:
-    <select name="gender">
+    <select  class="form-select" name="gender">
         <option value='male'>
             Male
         </option>
@@ -57,3 +46,4 @@
         </option>
     </select>
 </label>
+</div>

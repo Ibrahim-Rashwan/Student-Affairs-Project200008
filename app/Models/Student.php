@@ -19,6 +19,8 @@ class Student extends Model
         'level'
     ];
 
+    // protected $with = ['user'];
+
     public function user()
     {
         return $this->belongsTo('App\Models\User');
@@ -36,6 +38,16 @@ class Student extends Model
             as('subscription')->
             withPivot('mark')->
             withTimestamps();
+    }
+
+    public function toString()
+    {
+        return "{$this->id}-{$this->user->name}";
+    }
+
+    public function link()
+    {
+        return "<a href=\"/students/{$this->id}\">{$this->toString()}</a>";
     }
 
 }

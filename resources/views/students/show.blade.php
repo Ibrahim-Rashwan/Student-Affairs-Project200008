@@ -9,55 +9,60 @@
 
 @section('content')
 
-    @include('inc.users.show')
+    <div class="card p-3">
+        @include('inc.users.show')
 
-    <p>
-        Department:
-        <br>
-        {{$student->department->name}} ({{$student->department->code}})
-    </p>
+        <p class="mt-3">
+            Department:
+            {!! $student->department->link() !!}
+        </p>
 
 
-    <p>
-        Level:
-        <br>
-        {{$student->level}}
-    </p>
+        <p>
+            Level:
+            {{$student->level}}
+        </p>
 
-    <hr>
+        <hr>
 
-    <section style="margin-left: 5%">
-        @if ($student->courses && count($student->courses) > 0)
-            <h3>Courses:</h3>
-            @foreach ($student->courses as $course)
+        <section style="margin-left: 5%">
+            @if ($student->courses && count($student->courses) > 0)
+                <h3>Courses:</h3>
+                @foreach ($student->courses as $course)
+                    {!! $course->link() !!}
+                    <br>
+                    Mark:
+                    @if ($course->subscription->mark != null)
+                        {{$course->subscription->mark}}
+                    @else
+                        In progress
+                    @endif
 
-                <a href="courses/{{$course->id}}">{{$course->id}}-{{$course->name}} ({{$course->code}})</a>
-                <br>
-                Mark:
-                @if ($course->subscription->mark != null)
-                    {{$course->subscription->mark}}
-                @else
-                    None
-                @endif
-
+                    <hr>
+                @endforeach
+            @else
+                <h3>No Courses...</h3>
                 <hr>
-            @endforeach
-        @else
-            <h3>No Courses...</h3>
-        @endif
-    </section>
+            @endif
+        </section>
 
-    <hr>
+        <form action="/students/{{$student->id}}" method="POST">
+            <input type="hidden" name="_token" value={{ csrf_token() }} />
+            <input type="hidden" name="_method" value='DELETE' />
 
-    <a href="{{$route}}/edit">Edit</a>
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    @if (App\Shared\Shared::isAdmin())
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    @endif
+                    @if (App\Shared\Shared::isAdmin() || (App\Shared\Shared::isStudent() && App\Shared\Shared::getActiveUserTypedId() == $student->id))
+                    <a class="btn btn-primary mx-1" href="/students/{{$student->id}}/edit">Edit</a>
+                    @endif
+                </div>
+                <a class="btn btn-secondary" href="/students/">Back</a>
+            </div>
 
-    <form action="{{$route}}" method="POST">
-        <input type="hidden" name="_token" value={{ csrf_token() }} />
-        <input type="hidden" name="_method" value='DELETE' />
-
-        <button type="submit">Delete</button>
-    </form>
-
-    <a href="/students">Back</a>
+        </form>
+    </div>
 
 @endsection
