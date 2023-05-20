@@ -63,7 +63,7 @@ class MaterialsController extends Controller
      */
     public function update(Request $request, string $courseId, string $materialId)
     {
-        $this->validate($request, ['name' => 'required', 'extension' => 'required']);
+        $this->validate($request, ['name' => 'required']);
 
         $course = Course::findOrFail($courseId);
 

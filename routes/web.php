@@ -36,6 +36,7 @@ Route::resource('courses', CoursesController::class);
 Route::resource('courses.materials', MaterialsController::class)->except(['index', 'show']);
 Route::resource('courses.exams', ExamsController::class)->except(['index', 'show']);
 Route::post('courses/{course}/subscribe', [CoursesController::class, 'subscribe']);
+Route::post('courses/{course}/generate_student_names', [CoursesController::class, 'generate_student_names']);
 
 Route::resource('doctors', DoctorsController::class);
 

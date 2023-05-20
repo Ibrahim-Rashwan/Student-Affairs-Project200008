@@ -179,8 +179,129 @@ class CoursesController extends Controller
         // ]);
 
         $msg = 'Subscribed to course successfully';
-        return redirect(CoursesController::ROUTE)->
+        return redirect(CoursesController::ROUTE.$id)->
             with('success', $msg);
+    }
+
+    public function generate_student_names($id)
+    {
+
+        $data = ['id,name,phone,national id'];
+        $course = Course::find($id);
+        foreach ($course->students as $student) {
+            $line = "{$student->id},{$student->user->name},{$student->user->phone},{$student->user->national_number}";
+            array_push($data, $line);
+        }
+
+        if (!file_exists('tmp')) {
+            mkdir('tmp', 0777, true);
+        }
+
+        $file = "tmp/Student Names.csv";
+        $fp = fopen($file, "w") or die("Unable to open file!");
+        foreach ($data as $line) {
+            $val = explode(",", $line);
+            fputcsv($fp, $val);
+        }
+        fclose($fp);
+
+        header('Content-Description: File Transfer');
+        header('Content-Disposition: attachment; filename='.basename($file));
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($file));
+        header("Content-Type: text/csv");
+        readfile($file);
+
+        $this->output_file($file, 'Student Names.csv');
+
+        $msg = 'Generated Student Names successfully';
+        return redirect(CoursesController::ROUTE.$id)->
+            with('success', $msg);
+    }
+
+    private function output_file($file, $name, $mime_type='')
+    {
+        if(!is_readable($file)) die('File not found or inaccessible!');
+
+        $size = filesize($file);
+        $name = rawurldecode($name);
+        $known_mime_types=array(
+            "htm" => "text/html",
+            "exe" => "application/octet-stream",
+            "zip" => "application/zip",
+            "doc" => "application/msword",
+            "jpg" => "image/jpg",
+            "php" => "text/plain",
+            "xls" => "application/vnd.ms-excel",
+            "ppt" => "application/vnd.ms-powerpoint",
+            "gif" => "image/gif",
+            "pdf" => "application/pdf",
+            "txt" => "text/plain",
+            "html"=> "text/html",
+            "png" => "image/png",
+            "jpeg"=> "image/jpg"
+        );
+
+        if($mime_type==''){
+            $file_extension = strtolower(substr(strrchr($file,"."),1));
+            if(array_key_exists($file_extension, $known_mime_types)){
+                $mime_type=$known_mime_types[$file_extension];
+            } else {
+                $mime_type="application/force-download";
+            };
+        };
+        @ob_end_clean();
+        if(ini_get('zlib.output_compression'))
+        ini_set('zlib.output_compression', 'Off');
+        header('Content-Type: ' . $mime_type);
+        header('Content-Disposition: attachment; filename="'.$name.'"');
+        header("Content-Transfer-Encoding: binary");
+        header('Accept-Ranges: bytes');
+
+        if(isset($_SERVER['HTTP_RANGE']))
+        {
+            list($a, $range) = explode("=",$_SERVER['HTTP_RANGE'],2);
+            list($range) = explode(",",$range,2);
+            list($range, $range_end) = explode("-", $range);
+            $range=intval($range);
+            if(!$range_end) {
+                $range_end=$size-1;
+            } else {
+                $range_end=intval($range_end);
+            }
+
+            $new_length = $range_end-$range+1;
+            header("HTTP/1.1 206 Partial Content");
+            header("Content-Length: $new_length");
+            header("Content-Range: bytes $range-$range_end/$size");
+        } else {
+            $new_length=$size;
+            header("Content-Length: ".$size);
+        }
+
+        $chunksize = 1*(1024*1024);
+        $bytes_send = 0;
+        if ($file = fopen($file, 'r'))
+        {
+            if(isset($_SERVER['HTTP_RANGE']))
+            fseek($file, $range);
+
+            while(!feof($file) &&
+                (!connection_aborted()) &&
+                ($bytes_send<$new_length)
+            )
+            {
+                $buffer = fread($file, $chunksize);
+                echo($buffer);
+                flush();
+                $bytes_send += strlen($buffer);
+            }
+            fclose($file);
+        } else
+            die('Error - can not open file.');
+        die();
     }
 
     private function getAvaiableCourses() {
@@ -191,11 +312,6 @@ class CoursesController extends Controller
             $availableCourses = $courses;
         } else if (Shared::isDoctor()) {
             $availableCourses = Auth::user()->doctor->courses;
-            // foreach (Auth::user()->doctor->courses as $course) {
-            //     foreach ($course->courses as $courseStudent) {
-            //         array_push($avaiableCourses, $courseStudent);
-            //     }
-            // }
         } else if (Shared::isStudent()) {
             $loggedInStudent = Auth::user()->student;
 
@@ -210,26 +326,6 @@ class CoursesController extends Controller
                 if (!$course->getSubscriptionState() && $course->canSubscribe()) {
                     array_push($availableCourses, $course);
                 }
-
-                // if ($student->department_id == $loggedInStudent->department_id) {
-                //     array_push($avaiableCourses, $student);
-                // } else {
-                //     $pushed = false;
-
-                //     foreach ($student->courses as $course) {
-                //         foreach ($loggedInStudent->courses as $loggedInStudentCourse) {
-                //             if ($course->id == $loggedInStudentCourse->id) {
-                //                 array_push($avaiableCourses, $student);
-                //                 $pushed = true;
-                //                 break;
-                //             }
-                //         }
-
-                //         if ($pushed) {
-                //             break;
-                //         }
-                //     }
-                // }
             }
         }
 

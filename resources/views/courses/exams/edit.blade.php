@@ -3,20 +3,21 @@
 
 @section('content')
 
-    <h1>Edit Course:</h1>
+    <h1>Edit Exam for:</h1>
+    {!! $course->toString() !!}
 
-    <form id="upload-form" action="/courses/{{$course->id}}/exams/{{$exam->id}}" method="POST">
+    <form action="/courses/{{$course->id}}/exams/{{$exam->id}}" method="POST" class="mt-5">
         <input type="hidden" name="_token" value={{ csrf_token() }} />
         <input type="hidden" name="_method" value='PUT' />
 
-        <label class="form-label">
+        <label class="form-label" for="name">
             <?php
                 $displayName = App\Shared\Shared::getDisplayName($exam->name);
                 $name = App\Shared\Shared::getBaseName($displayName);
             ?>
             Name:
-            <input class="form-control" type="text" name="name" value="{{$name}}" />
         </label>
+        <input id="name" class="form-control" type="text" name="name" value="{{$name}}" />
 
         <br>
         <br>

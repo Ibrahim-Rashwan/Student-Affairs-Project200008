@@ -2,6 +2,19 @@
     $route = "/courses/{$course->id}";
 
     $materials = json_decode($course->materials);
+
+    $canAdd = false;
+    if (App\Shared\Shared::isAdmin()) {
+        $canAdd = true;
+    } else if (App\Shared\Shared::isDoctor()) {
+        $doctor = Illuminate\Support\Facades\Auth::user()->doctor;
+        foreach ($doctor->courses as $doctorCourse) {
+            if ($doctorCourse->id == $course->id) {
+                $canAdd = true;
+                break;
+            }
+        }
+    }
     // $exams = json_decode($course->exams);
     // $department = App\Models\Department::findOrFail($course->department_id);
     // $doctor = App\Models\Doctor::findOrFail($course->doctor_id);
@@ -78,7 +91,7 @@
                 <hr>
             @endif
 
-            @if (App\Shared\Shared::isAdmin() || (App\Shared\Shared::isDoctor() && App\Shared\Shared::getActiveUserTypedId() == $course->id))
+            @if ($canAdd)
                 <a class="btn btn-success ms-5" href="{{$route}}/materials/create">Upload materials</a>
             @endif
         </section>
@@ -120,7 +133,7 @@
                 <h3>No Exams...</h3>
             @endif
 
-            @if (App\Shared\Shared::isAdmin() || (App\Shared\Shared::isDoctor() && App\Shared\Shared::getActiveUserTypedId() == $course->id))
+            @if ($canAdd)
                 <a class="btn btn-success ms-5" href="{{$route}}/exams/create">Add Exam</a>
             @endif
         </section>
@@ -128,7 +141,6 @@
 
     <div class="d-flex justify-content-between">
         @if (App\Shared\Shared::isAdmin())
-        <a href="{{$route}}/edit" class="btn btn-primary d-inline">Edit</a>
         @endif
 
         @if (App\Shared\Shared::isAdmin())
@@ -136,6 +148,7 @@
             <input type="hidden" name="_token" value={{ csrf_token() }} />
             <input type="hidden" name="_method" value='DELETE' />
 
+            <a href="{{$route}}/edit" class="btn btn-primary d-inline">Edit</a>
             <button type="submit" class="btn btn-danger">Delete</button>
         </form>
         @endif
@@ -166,7 +179,14 @@
             @endif
         @endif
 
-    <a href="/courses/" class="btn btn-success">Back</a>
+        @if (App\Shared\Shared::isAdmin())
+            <form action="{{$route}}/generate_student_names" method="POST" class="d-inline">
+                <input type="hidden" name="_token" value={{csrf_token()}}>
+                <button type="submit" class="btn btn-secondary">Generate Student Names</button>
+            </form>
+        @endif
+
+        <a href="/courses/" class="btn btn-success">Back</a>
 
     </div>
 
