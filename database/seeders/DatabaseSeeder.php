@@ -9,6 +9,7 @@ use Database\Seeders\DoctorSeeder;
 use Database\Seeders\DepartmentSeeder;
 use Database\Seeders\CourseSeeder;
 use Database\Seeders\StudentSeeder;
+use Database\Seeders\SubscriptionSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -23,6 +24,7 @@ class DatabaseSeeder extends Seeder
             DepartmentSeeder::class,
             CourseSeeder::class,
             StudentSeeder::class,
+            SubscriptionSeeder::class
         ];
 
         $this->call($seeders);

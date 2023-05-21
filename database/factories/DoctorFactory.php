@@ -21,7 +21,7 @@ class DoctorFactory extends Factory
 
         return [
             'user_id' => User::factory(['age' => fake()->numberBetween(28, 45)]),
-            'courses' => json_encode([])
+            // 'courses' => json_encode([])
         ];
 
     }

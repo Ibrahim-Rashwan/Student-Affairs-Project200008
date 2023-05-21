@@ -2,7 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
@@ -30,6 +32,16 @@ class UserFactory extends Factory
         '01109922510'
     ];
 
+    private $passwords = [
+        'password',
+        'security',
+        '12345678',
+        'adminadmin',
+        'rootroot',
+        '87654321',
+        'abcdefg'
+    ];
+
     /**
      * Define the model's default state.
      *
@@ -43,10 +55,13 @@ class UserFactory extends Factory
         $gender = $isMale ? 'male' : 'female';
         $name = $isMale ? fake()->firstNameMale() : fake()->firstNameFemale();
 
+        // $password = $this->passwords[User::count() % count($this->passwords)];
+        $password = '12345678';
+
         return [
             'email' => $email,
             'email_verified_at' => now(),
-            'password' => fake()->password(),
+            'password' => Hash::make($password),
             'remember_token' => Str::random(10),
 
             'name' => $name,
