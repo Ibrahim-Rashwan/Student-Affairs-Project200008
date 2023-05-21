@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 class AdminSeeder extends Seeder
 {
 
-    private const EMAIL = "root@gmail.com";
+    private const EMAIL = "admin@gmail.com";
 
     /**
      * Run the database seeds.
@@ -23,7 +23,7 @@ class AdminSeeder extends Seeder
             [
                 'email' => AdminSeeder::EMAIL,
                 'email_verified_at' => now(),
-                'password' => Hash::make('root'),
+                'password' => Hash::make('admin'),
                 'remember_token' => Str::random(10),
                 'name' => 'Ibrahim Rashwan',
                 'national_number' => '30202091600452',

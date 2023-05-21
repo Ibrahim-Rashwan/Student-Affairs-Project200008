@@ -55,7 +55,8 @@ class UserFactory extends Factory
         $gender = $isMale ? 'male' : 'female';
         $name = $isMale ? fake()->firstNameMale() : fake()->firstNameFemale();
 
-        $password = $this->passwords[User::count() % count($this->passwords)];
+        // $password = $this->passwords[User::count() % count($this->passwords)];
+        $password = '12345678';
 
         return [
             'email' => $email,
