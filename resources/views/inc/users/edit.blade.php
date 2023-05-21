@@ -5,6 +5,12 @@
 </label>
 
 <div class="mb-3">
+    <label class="form-label w-100">
+        Password:<input class="form-control" type="password" name="password" />
+    </label>
+</div>
+
+<div class="mb-3">
     <label class="form-label w-100 ">
     Name:
     <input class="form-control"  type="text" name="name" value="{{$user->name}}" />

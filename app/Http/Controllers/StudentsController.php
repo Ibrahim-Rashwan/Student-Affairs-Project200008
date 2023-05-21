@@ -65,7 +65,7 @@ class StudentsController extends Controller
             'level' => 'required'
         ]);
 
-        $user = User::create($request->all() + [
+        $user = User::create($request->all(['email', 'name', 'national_number', 'phone', 'age', 'gender']) + [
             'password' => Hash::make($request->password)
         ]);
         $user->email_verified_at = now();
@@ -133,7 +133,8 @@ class StudentsController extends Controller
         ]);
 
         $student = Student::find($studentId);
-        $student->user->fill($request->all());
+        $student->user->fill($request->all(['email', 'name', 'national_number', 'phone', 'age', 'gender']));
+        $student->user->password = Hash::make($request->password);
         $student->fill($request->all());
         $student->user->save();
         $student->save();
