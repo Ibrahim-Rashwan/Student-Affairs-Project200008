@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class StudentsController extends Controller
 {
@@ -24,7 +25,7 @@ class StudentsController extends Controller
         $students = Student::all();
         $availableStudents = $this->getAvaiableStudents($students);
 
-        $page = $request->input('page');
+        $page = $request->input('page', 1);
         $perPage = 20;
         $slice = array_slice($availableStudents, ($page-1) * $perPage, $perPage);
         // var_dump($page);
@@ -64,7 +65,9 @@ class StudentsController extends Controller
             'level' => 'required'
         ]);
 
-        $user = User::create($request->all());
+        $user = User::create($request->all() + [
+            'password' => Hash::make($request->password)
+        ]);
         $user->email_verified_at = now();
         $user->save();
 

@@ -26,7 +26,7 @@ class User extends Authenticatable
         'national_number',
         'phone',
         'age',
-        'gender',
+        'gender'
     ];
 
     /**

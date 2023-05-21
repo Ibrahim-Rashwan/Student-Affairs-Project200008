@@ -7,6 +7,7 @@ use App\Models\Doctor;
 use App\Models\User;
 use App\Shared\Shared;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class DoctorsController extends Controller
 {
@@ -45,7 +46,9 @@ class DoctorsController extends Controller
     {
         $this->validate($request, Shared::USER_RULES);
 
-        $user = User::create($request->all());
+        $user = User::create($request->all(['email', 'name', 'national_number', 'phone', 'age', 'gender']) + [
+            'password' => Hash::make($request->password)
+        ]);
         $user->email_verified_at = now();
         $user->save();
 

@@ -309,9 +309,15 @@ class CoursesController extends Controller
         $availableCourses = [];
 
         if (Shared::isAdmin()) {
-            $availableCourses = $courses;
+            foreach ($courses as $course) {
+                array_push($availableCourses, $course);
+            }
+            // $availableCourses = $courses;
         } else if (Shared::isDoctor()) {
-            $availableCourses = Auth::user()->doctor->courses;
+            foreach (Auth::user()->doctor->courses as $course) {
+                array_push($availableCourses, $course);
+            }
+            // $availableCourses = Auth::user()->doctor->courses;
         } else if (Shared::isStudent()) {
             $loggedInStudent = Auth::user()->student;
 
