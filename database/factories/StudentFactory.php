@@ -23,7 +23,7 @@ class StudentFactory extends Factory
             'user_id' => User::factory(['age' => fake()->numberBetween(18, 26)]),
             'department_id' => fake()->numberBetween(1, 6),
             'level' => fake()->numberBetween(1, 4),
-            'courses' => json_encode([])
+            // 'courses' => json_encode([])
         ];
 
     }
