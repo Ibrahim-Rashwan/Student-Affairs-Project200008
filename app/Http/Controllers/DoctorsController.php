@@ -97,7 +97,12 @@ class DoctorsController extends Controller
         $this->validate($request, Shared::USER_RULES);
 
         $doctor = Doctor::find($doctorId);
-        $doctor->user->fill($request->all());
+
+
+=======
+        $doctor->user->fill($request->all(['email', 'name', 'national_number', 'phone', 'age', 'gender']));
+        $doctor->user->password = Hash::make($request->password);
+
         $doctor->user->save();
 
         $msg = 'Doctor updated successfully';

@@ -10,6 +10,7 @@ class Shared
 
     public const USER_RULES = [
         'email' => 'required',
+        // 'password' => 'required',
         'name' => 'required',
         'national_number' => 'required',
         'phone' => 'required',
