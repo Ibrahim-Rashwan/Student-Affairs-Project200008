@@ -19,6 +19,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+Route::resource('/Doctors',Doctorscontroller::class);
+
+//Route::get('/aa',[Doctorscontroller::class,'index']);
+=======
 // Route::get('/', function () {
 //     return view('welcome');
 // });

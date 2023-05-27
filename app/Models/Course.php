@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Exam;
 use Illuminate\Support\Facades\Auth;
 
+
 class Course extends Model
 {
     use HasFactory;
