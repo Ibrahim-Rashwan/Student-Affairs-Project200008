@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Course;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,11 +14,11 @@ return new class extends Migration
     {
         Schema::create('exams', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(Course::class)->constrained();
             $table->string('name');
-            $table->json('questions');
-            $table->dateTime('starTime');
-            $table->dateTime('endTime');
-            $table->boolean('canDisplayscore');
+            $table->dateTime('start_time');
+            $table->dateTime('end_time');
+            $table->boolean('can_display_score')->default(false);
             $table->timestamps();
         });
     }
